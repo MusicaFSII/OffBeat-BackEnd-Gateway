@@ -1,4 +1,4 @@
-package com.OffBeatGetway.config;
+package com.OffBeatGateway.config;
 
 import java.util.Base64;
 
