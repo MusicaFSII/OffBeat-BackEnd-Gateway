@@ -36,11 +36,71 @@ public class SecurityConfig {
 
             .authorizeExchange(exchanges -> exchanges
 
-                .pathMatchers(HttpMethod.GET, "/api/productos/**")
-                    .hasAnyRole("USER", "ADMIN")
+                //PERMISO GENERAL PARA REACT
 
-                .pathMatchers("/api/productos/**")
-                    .hasRole("ADMIN")
+                .pathMatchers(HttpMethod.OPTIONS).permitAll()
+
+                //PERMISOS DE PRODUCTOS
+
+                .pathMatchers(HttpMethod.GET, "/api/v1/productos/**")
+                    .permitAll()
+
+                .pathMatchers(HttpMethod.POST,
+                    "/api/v1/productos/lista",
+                    "/api/v1/productos/descontar-stock")
+                    .hasAnyRole("admin", "vendedor", "cliente")
+
+                .pathMatchers("/api/v1/productos/**")
+                    .hasRole("admin")
+
+                //PERMISOS DE CATEGORÍAS
+
+                .pathMatchers(HttpMethod.GET, "/api/v1/categorias/**")
+                    .permitAll()
+
+                .pathMatchers("/api/v1/categorias/**")
+                    .hasRole("admin")
+
+                //PERMISOS DE BLOGS
+
+                .pathMatchers(HttpMethod.GET, "/api/v1/blogs/**")
+                    .permitAll()
+
+                .pathMatchers("/api/v1/blogs/**")
+                    .hasRole("admin")
+
+                //PERMISOS DE USUARIOS
+
+                .pathMatchers(HttpMethod.POST,
+                    "/api/v1/usuarios/login",
+                    "/api/v1/usuarios/login/google",
+                    "/api/v1/usuarios")
+                    .permitAll()
+
+                .pathMatchers(HttpMethod.GET, "/api/v1/usuarios/count")
+                    .hasAnyRole("admin", "vendedor")
+
+                .pathMatchers("/api/v1/usuarios/**")
+                    .hasRole("admin")
+
+                //PERMISOS DE COMENTARIOS
+
+                .pathMatchers(HttpMethod.POST, "/api/v1/comentarios")
+                    .permitAll()
+
+                .pathMatchers("/api/v1/comentarios/**")
+                    .hasRole("admin")
+
+                //PERMISOS DE COMPRAS
+
+                .pathMatchers(HttpMethod.POST, "/api/v1/compras")
+                    .hasAnyRole("admin", "vendedor", "cliente")
+
+                .pathMatchers(HttpMethod.GET, "/api/v1/compras/{id}")
+                    .hasAnyRole("admin", "vendedor", "cliente")
+
+                .pathMatchers("/api/v1/compras/**")
+                    .hasRole("admin")
 
                 .anyExchange().authenticated()
             )
